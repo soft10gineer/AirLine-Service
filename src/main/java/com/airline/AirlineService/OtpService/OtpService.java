@@ -1,16 +1,28 @@
 package com.airline.AirlineService.OtpService;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.airline.AirlineService.User.UserOnboarding;
+import com.airline.AirlineService.User.UserRepository;
+import com.airline.AirlineService.User.UserService;
+
 @Service
 public class OtpService {
 	
 	@Autowired
 	private OtpRepository otprepository;
+	
+	@Autowired
+	private UserRepository userrepository;
+	
+	@Autowired
+	private UserService userservice;
+	
 	
 	public String generateOtp(String mobileNumber) {
 		
@@ -47,4 +59,40 @@ public class OtpService {
 			}
 		
 	}
+	
+	public String validateOtp(String mobileNumber, String validateOtp) {
+		OtpDtls user = otprepository.findById(mobileNumber).get();
+		
+		if(user.getGeneratedOtp().equals(validateOtp)) {
+			LocalDateTime otpTime = user.getOtpGenerateTime();
+			LocalDateTime userOtpTime = LocalDateTime.now();
+			
+			Duration duration = Duration.between(otpTime, userOtpTime);
+			if(duration.getSeconds()<=60) {
+				user.setUsrVldty(true);
+				otprepository.save(user);
+				
+				UserOnboarding onboardUser = new UserOnboarding();
+				String leadId = userservice.generateLeadId();
+				onboardUser.setUserId(leadId);
+				onboardUser.setUserMobileNumber(user.getUserMblNb());
+				onboardUser.setCreatedDateTimestamp(LocalDateTime.now());
+				userrepository.save(onboardUser);
+				
+				return "User Validated With Leadid "+leadId ;
+			
+			} else {
+				return "Time Limit Exceeded";
+			}
+			} else {
+				
+			return "Wrong Otp" ;
+		}
+		
+		
+	}
+	
+	
+	
+	
 }
