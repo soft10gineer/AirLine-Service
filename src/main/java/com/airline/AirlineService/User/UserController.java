@@ -20,7 +20,7 @@ public class UserController {
 		
 		String mobileNumber = userBody.get("Mobile Number");
 		System.out.println(mobileNumber);
-		return userservice.registerUser(mobileNumber);
-		
+		return userservice.registerUser(mobileNumber); 
+		 
 	}
 }

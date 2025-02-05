@@ -18,10 +18,17 @@ public class OtpController {
 	
 	@PostMapping("/validate")
 	public String validateOtp(@RequestBody Map<String, Object> userBody) {
-		String mobileNumber = (String) userBody.get("Mobile Number");
+		String leadId = (String) userBody.get("leadId");
 		String userOtp = (String) userBody.get("Otp");
-		otpservice.validateOtp(mobileNumber,userOtp);
-		return "STRING"; 
+		return otpservice.validateOtp(leadId,userOtp);
+		 
+	}
+	
+	@PostMapping("/generate")
+	public String generateOtp(@RequestBody Map<String, String> userBody) {
+		String leadId = userBody.get("leadId");
+		return 	otpservice.generateOtp(leadId);
+		
 	}
 	
 

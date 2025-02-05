@@ -13,13 +13,24 @@ import com.airline.AirlineService.OtpService.OtpService;
 public class UserService {
 	
 	
+	
 	@Autowired
-	private OtpService otpservice;
+	private UserRepository userrepository;
+	
 	
 	public String registerUser(String mobileNumber) {
 		String resultMobileNumber = "+91"+mobileNumber;
-		System.out.println(resultMobileNumber);
-		return otpservice.generateOtp(resultMobileNumber);
+		UserOnboarding user = userrepository.findbyMobile(resultMobileNumber);
+		if (user == null) {
+			UserOnboarding userdtls = new UserOnboarding();
+			userdtls.setUserMobileNumber(resultMobileNumber);
+			String leadId = generateLeadId();
+			userdtls.setUserId(leadId);
+			userrepository.save(userdtls);
+			return "User Registered Succesfully with leadid "+ " "+ leadId  ;
+		} else {
+			return "User Already Exist with leadId "+ " "+ user.getUserId();
+		} 
 		
 	} 
 	 
