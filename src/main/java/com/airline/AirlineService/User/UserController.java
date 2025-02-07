@@ -45,9 +45,18 @@ public class UserController {
 	@PostMapping("/forgot-password")
 	public String userForgotPassword(@RequestBody Map<String, Object> userBody) {
 		String user = userservice.forgotPassword(userBody);
-		return otpservice.generateOtp(user);
-	    
+		return otpservice.generateOtpUsingEmail(user);
 	}
+	
+	@PostMapping("/forgot-password-validation")
+	public String userForgotPasswordValidation(@RequestBody Map<String, Object> userBody) {
+		String validationCode = (String) userBody.get("Verification Code");
+		String validationEmail = (String) userBody.get("Email");
+		otpservice.validateOtpUsingCode(validationEmail, validationCode);
+		return "String";
+		
+	}
+	
 	
 	
 }

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.airline.AirlineService.User.UserOnboarding;
 import com.airline.AirlineService.User.UserRepository;
-import com.airline.AirlineService.User.UserService;
 
 @Service
 public class OtpService {
@@ -21,8 +20,23 @@ public class OtpService {
 	@Autowired
 	private UserRepository userrepository;
 	
-	@Autowired
-	private UserService userservice;
+	public String validateOtpUsingCode(String validationEmail, String validationCode) {
+		UserOnboarding user = userrepository.findByEmail(validationEmail);
+		if( user == null ) {
+			return "User Not Found";
+		} else {
+			String userMobile = user.getUserMobileNumber();
+			OtpDtls userOtp = otprepository.findById(userMobile).get();
+			
+			if (validationCode.equals(userOtp.getGeneratedOtp())) {
+				
+				return "User Validated Succesfully";
+			
+			} else {}
+			
+				return "Wrong Code Entered";
+		}
+	}
 	
 	public String generateOtpUsingEmail(String mobileNumber) {
 		UserOnboarding user = userrepository.findbyMobile(mobileNumber);
@@ -31,17 +45,22 @@ public class OtpService {
 		if (user == null) {
 			return "User Not Found";
 		} else {
+			
+			
 			String generatedOtp = "";
 			Random rand = new Random();
 			for (int i = 0; i < 6; i++) {
 				int rand_int = rand.nextInt(9);
 				generatedOtp = generatedOtp + Integer.toString(rand_int);
 				}
-			
-			
+			otp.setGeneratedOtp(generatedOtp);
+			otp.setUserMblNb(mobileNumber);
+			otp.setOtpGenerateTime(LocalDateTime.now());
+			otp.setOtpAttempt(1);
+			otprepository.save(otp);
+			return ("Otp Generated Succesfully "+ " " + generatedOtp); 
 			
 		}
-		return "String";
 	}
 	
 	
