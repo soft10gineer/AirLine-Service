@@ -2,6 +2,7 @@ package com.airline.AirlineService.User;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class UserService {
 		if (user == null) {
 			UserOnboarding userdtls = new UserOnboarding();
 			userdtls.setUserMobileNumber(resultMobileNumber);
+			userdtls.setCreatedDateTimestamp(LocalDateTime.now());
 			String leadId = generateLeadId();
 			userdtls.setUserId(leadId);
 			userrepository.save(userdtls);
@@ -45,5 +47,57 @@ public class UserService {
         String leadId = "AIR" + formattedDateTime + randomLowercase + randomUppercase ;
 		return leadId;
 	}
+	
+	public String userLogin(Map<String, Object> userBody) {
+		String email  = (String) userBody.get("Email");
+		String password = (String) userBody.get("Password");
+		
+		UserOnboarding user = userrepository.findByEmail(email);
+		if(user == null) {
+			return "User Not Found";
+		} else {
+			
+		if(user.getUserPasswordHash().equals(password)) {
+			
+			return "User Logged In";
+			
+		} else {
+			
+			return "Entered Password is Wrong";
+		}
+			
+		}
+		}
+	
+	public String personalDtls(Map<String, Object> userBody) {
+		String leadId = (String) userBody.get("LeadId");
+		
+		UserOnboarding user = userrepository.findById(leadId).get();
+		
+		if(user != null) {
+		
+		String firstName = (String) userBody.get("First Name");
+		String lastName = (String) userBody.get("Last Name");
+		Integer age = (Integer) userBody.get("Age");
+		String gender = (String) userBody.get("Gender");
+		String email = (String) userBody.get("Email");
+		String password = (String) userBody.get("Password");
+		
+		
+		
+		user.setUserFirstName(firstName);
+		user.setUserLastName(lastName);
+		user.setUserAge(age);
+		user.setUserGender(gender);
+		user.setUserEmail(email);
+		user.setUserPasswordHash(password);
+		
+		return "User Details Saved Succesfully";
+		
+		} else {
+			
+		return "User not found with the above credentials";
+		}
+		}
 
 }

@@ -23,4 +23,15 @@ public class UserController {
 		return userservice.registerUser(mobileNumber); 
 		 
 	}
+	
+	@PostMapping("/personal_details")
+	public String userPersonalDetails(@RequestBody Map<String, Object> userBody) {
+		return userservice.personalDtls(userBody);
+	}
+	
+	@PostMapping("/login")
+	public String userLogin(@RequestBody Map<String, Object> userBody) {
+		return "String";
+	}
+	
 }
