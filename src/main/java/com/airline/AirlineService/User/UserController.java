@@ -51,19 +51,21 @@ public class UserController {
 	public String userForgotPasswordValidation(@RequestBody Map<String, Object> userBody) {
 		String validationCode = (String) userBody.get("Verification Code");
 		String validationEmail = (String) userBody.get("Email");
-		otpservice.validateOtpUsingCode(validationEmail, validationCode);
-		return "String";
+		return otpservice.validateOtpUsingCode(validationEmail, validationCode);
+		
 	}
 	
 	@PostMapping("/reset-password")
 	public String userResetPassword(@RequestBody Map<String, Object> userBody) {
-		String leadId = (String) userBody.get("LeadID");
+		String leadId = (String) userBody.get("LeadId");
 		String newPassword = (String) userBody.get("Password");
+		System.out.println(leadId);
+		System.out.println(newPassword);
 		String userStatus = otpservice.getUserResetPasswordStatus(leadId);
 		if (userStatus.equals("25")){
 			return userservice.resetPassword(leadId, newPassword);
 		} else { 
-			return "Technical Exception Occured";
+			return "Technical Exception Occured";	
 		}
 	}
 		

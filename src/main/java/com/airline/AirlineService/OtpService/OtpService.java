@@ -49,6 +49,7 @@ public class OtpService {
 			return "User Id not Found";
 		} else {
 			UserOnboarding userDtls = userrepository.findById(leadId).get();
+			System.out.println(userDtls);
 			return otprepository.findById(userDtls.getUserMobileNumber()).get().getUserStatus();
 		}
 	}
