@@ -29,14 +29,30 @@ public class OtpService {
 			OtpDtls userOtp = otprepository.findById(userMobile).get();
 			
 			if (validationCode.equals(userOtp.getGeneratedOtp())) {
-				
+				userOtp.setUsrVldty(true);
+				userOtp.setOtpAttempt(0);
+				userOtp.setUserStatus("25");
+				otprepository.save(userOtp);
 				return "User Validated Succesfully";
 			
-			} else {}
-			
+			} else {
 				return "Wrong Code Entered";
+			}
+			
+				
 		}
 	}
+	
+	public String getUserResetPasswordStatus(String leadId) {
+		Optional<UserOnboarding> user = userrepository.findById(leadId);
+		if(user.isEmpty()) {
+			return "User Id not Found";
+		} else {
+			UserOnboarding userDtls = userrepository.findById(leadId).get();
+			return otprepository.findById(userDtls.getUserMobileNumber()).get().getUserStatus();
+		}
+	}
+	
 	
 	public String generateOtpUsingEmail(String mobileNumber) {
 		UserOnboarding user = userrepository.findbyMobile(mobileNumber);
@@ -57,6 +73,7 @@ public class OtpService {
 			otp.setUserMblNb(mobileNumber);
 			otp.setOtpGenerateTime(LocalDateTime.now());
 			otp.setOtpAttempt(1);
+			otp.setUserStatus("20");
 			otprepository.save(otp);
 			return ("Otp Generated Succesfully "+ " " + generatedOtp); 
 			

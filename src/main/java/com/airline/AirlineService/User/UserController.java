@@ -3,8 +3,6 @@ package com.airline.AirlineService.User;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +16,7 @@ public class UserController {
 	
 	@Autowired
 	private UserService userservice;
+	
 	
 	@Autowired
 	private OtpService otpservice;
@@ -54,8 +53,20 @@ public class UserController {
 		String validationEmail = (String) userBody.get("Email");
 		otpservice.validateOtpUsingCode(validationEmail, validationCode);
 		return "String";
-		
 	}
+	
+	@PostMapping("/reset-password")
+	public String userResetPassword(@RequestBody Map<String, Object> userBody) {
+		String leadId = (String) userBody.get("LeadID");
+		String newPassword = (String) userBody.get("Password");
+		String userStatus = otpservice.getUserResetPasswordStatus(leadId);
+		if (userStatus.equals("25")){
+			return userservice.resetPassword(leadId, newPassword);
+		} else { 
+			return "Technical Exception Occured";
+		}
+	}
+		
 	
 	
 	

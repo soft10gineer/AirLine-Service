@@ -27,20 +27,40 @@ public class OtpDtls {
 	private LocalDateTime otpGenerateTime;
 	
 	@Column(name = "usr_vldty")
-	private Boolean usrVldty = false; 
+	private Boolean usrVldty = false;
+	
+	@Column(name = "status")
+	private String userStatus = "0";
 	
 	public OtpDtls() {
 	}
 
+	
+	
 	public OtpDtls(String userMblNb, String generatedOtp, Integer otpAttempt, LocalDateTime otpGenerateTime,
-			Boolean usrVldty) {
+			Boolean usrVldty, String userStatus) {
 		super();
 		this.userMblNb = userMblNb;
 		this.generatedOtp = generatedOtp;
 		this.otpAttempt = otpAttempt;
 		this.otpGenerateTime = otpGenerateTime;
 		this.usrVldty = usrVldty;
+		this.userStatus = userStatus;
 	}
+
+
+
+	public String getUserStatus() {
+		return userStatus;
+	}
+
+
+
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
+	}
+
+
 
 	public Boolean getUsrVldty() {
 		return usrVldty;

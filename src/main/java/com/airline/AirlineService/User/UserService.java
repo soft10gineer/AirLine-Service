@@ -6,11 +6,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import com.airline.AirlineService.OtpService.OtpService;
 
 @Service
 public class UserService {
@@ -20,6 +16,13 @@ public class UserService {
 	@Autowired
 	private UserRepository userrepository;
 	
+	
+	public String resetPassword(String leadId, String userPassword) {
+		UserOnboarding user = userrepository.findById(leadId).get();
+		user.setUserPasswordHash(userPassword);
+		userrepository.save(user);
+		return "User Password Reset Succesfully! Please Login Again";
+	}
 	
 	
 	public String registerUser(String mobileNumber) {
