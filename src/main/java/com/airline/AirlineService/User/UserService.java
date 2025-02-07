@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.airline.AirlineService.OtpService.OtpService;
@@ -17,6 +19,7 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository userrepository;
+	
 	
 	
 	public String registerUser(String mobileNumber) {
@@ -69,6 +72,18 @@ public class UserService {
 		}
 		}
 	
+	public String forgotPassword(Map<String, Object> userBody) {
+	    String email = (String) userBody.get("Email");
+
+	    UserOnboarding user = userrepository.findByEmail(email);
+	    
+	    if (user == null) {
+	        return "User not found";
+	    }
+	    
+	   return user.getUserMobileNumber() ;
+	}
+	
 	public String personalDtls(Map<String, Object> userBody) {
 		String leadId = (String) userBody.get("LeadId");
 		
@@ -91,7 +106,7 @@ public class UserService {
 		user.setUserGender(gender);
 		user.setUserEmail(email);
 		user.setUserPasswordHash(password);
-		
+		userrepository.save(user);
 		return "User Details Saved Succesfully";
 		
 		} else {

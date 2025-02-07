@@ -24,6 +24,26 @@ public class OtpService {
 	@Autowired
 	private UserService userservice;
 	
+	public String generateOtpUsingEmail(String mobileNumber) {
+		UserOnboarding user = userrepository.findbyMobile(mobileNumber);
+		OtpDtls otp = otprepository.findById(mobileNumber).get();
+		
+		if (user == null) {
+			return "User Not Found";
+		} else {
+			String generatedOtp = "";
+			Random rand = new Random();
+			for (int i = 0; i < 6; i++) {
+				int rand_int = rand.nextInt(9);
+				generatedOtp = generatedOtp + Integer.toString(rand_int);
+				}
+			
+			
+			
+		}
+		return "String";
+	}
+	
 	
 	public String generateOtp(String leadId) { 
 		
@@ -74,6 +94,7 @@ public class OtpService {
 			Duration duration = Duration.between(otpTime, userOtpTime);
 			if(duration.getSeconds()<=60) {
 				otpUser.setUsrVldty(true);
+				otpUser.setOtpAttempt(0);
 				otprepository.save(otpUser);
 				
 				
