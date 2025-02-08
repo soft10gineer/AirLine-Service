@@ -59,8 +59,7 @@ public class UserController {
 	public String userResetPassword(@RequestBody Map<String, Object> userBody) {
 		String leadId = (String) userBody.get("LeadId");
 		String newPassword = (String) userBody.get("Password");
-		System.out.println(leadId);
-		System.out.println(newPassword);
+		
 		String userStatus = otpservice.getUserResetPasswordStatus(leadId);
 		if (userStatus.equals("25")){
 			return userservice.resetPassword(leadId, newPassword);
