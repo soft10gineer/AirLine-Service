@@ -19,7 +19,7 @@ public class BookingDtls {
 	@Column(name= "usr_id")
 	private String userId;
 	
-	@Column(name= "flight_id")
+	@Column(name= "flght_id")
 	private String flightId;
 	
 	@Column(name= "seat_nmbr")

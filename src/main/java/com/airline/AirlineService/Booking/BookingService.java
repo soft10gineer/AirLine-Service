@@ -2,6 +2,7 @@ package com.airline.AirlineService.Booking;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -24,6 +25,14 @@ public class BookingService {
 	
 	@Autowired
 	private BookingRepository bookingrepository;
+	
+	public List<BookingDtls> findBookingsOfUser(String leadId) {
+		List<BookingDtls> bookingList = bookingrepository.findBookingByUserId(leadId);
+		System.out.println(bookingList);
+		return bookingList;
+		
+	}
+	
 	
 	public String ticketBooking(Map<String, Object> userBody) {
 		String leadId = (String) userBody.get("leadId");
